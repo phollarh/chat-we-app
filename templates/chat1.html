@@ -1,0 +1,188 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1 /font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% 'css/style.css' %}">
+    <title>chatapp</title>
+   
+
+</head>
+<body class="msg_body">
+    <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+    <div class="popupwrappercloser">
+    </div>
+        <div class="wrapper">
+            <nav class="navbr-mine">
+                <ul class="my-logo">
+                    <li>TEXTAPP++ </li>
+                </ul>
+                <ul class="my-ul">
+                    <li>Home</li>
+                    <li>About</li>
+                    <li>contact</li>
+                    <li>Store</li>
+                    {% if user.is_authenticated %}
+                    <span class="account_span"> Hello,{{user.first_name}}</span>
+                    {% endif %}
+                    <li class="account_icon"><i class="bi bi-person-circle"></i> </li>
+                        
+                            <div class=" acoount_popup">
+                                {% if not user.is_authenticated %}
+                                <li>Log in</li>
+                                <li class="pop-border">Sign up</li>
+                                {% else %}
+                                <li>My profile</li>
+                                <li class="pop-border">Settings</li>
+                                <li>Activity Log</li>
+                                <li>Log out</li>
+                                {% endif %}
+                            </div>
+                        
+                    
+                
+                </ul>
+
+            </nav>
+        </div>
+        
+            <div class="row-flex-created">
+                
+                    <div class="col-four message-box">
+                        <div class="shadow  my-1 mb-5 bg-body-tertiary rounded">
+                        <div class="message-header-div"><p class="message-header">Messages </p><p class="message-header-icon"><i class="bi bi-chat-right-quote"></i></p></div>
+                        {% for chat in messages %}
+                        <div class="message-content" data-id="{{user.id}}"  data-sender-id="{{chat.sender.id}}" data-recipient-id="{{ chat.recipient.id }}">
+                            
+
+
+                            <div><span class="msg-pic"><i class="bi bi-person-circle"></i></span></div>
+                            <div class="text-messagediv">
+                                <ul class="text-message">
+                                    <li  class="sender">{% if chat.sender == request.user%}{{chat.recipient.first_name}}{%else%}{{chat.sender.first_name}}{% endif %}</li>            
+                                </ul>
+                                <ul class="text-message main-msg" >
+                                
+                                    <li class="trun-msg">{{chat.content}}</li>
+                                    <li class="msg-time"> 7:05pm</li>
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        
+                    </div>
+                        </div>
+                        <div class="col-six message-view">
+                            <div class="header-wrapper">
+                                <div class="heading-content">
+                                    <ul>
+                                        <li class="header-backtick"><i class="bi bi-caret-left-square-fill"></i></li>
+                                        <ul>
+                                            <li class="header-img"><i class="bi bi-person-circle"></i></li>
+                                            <li class="header-name" data-recipient-id="{{ recipient.id }}" data-user-id="{{ request.user.id }}">{{ recipient.first_name }}</li>  
+                                        </ul>
+                                        <li class="heading-details"><i class="bi bi-three-dots"></i></li>    
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="messages-view">
+                                <ul>
+                                    {% for chat in messages %}
+                                        {% if chat.sender.id == request.user.id %}
+                                        <li class="sender">
+                                            <span class="message">{{ chat.content }}</span>
+                                        </li>
+                                        {% else %}
+                                        <li class="receiver">
+                                            <span class="message">{{ chat.content }}</span>
+                                        </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="input-wrapper">
+                                <form class="form_input">
+                                    <div class="input-text">
+                                        <input type="text" name="message" id="message" required>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+            
+            </div>
+    
+
+    
+    
+        
+        <br><br><br><br><br><br>
+        <footer>
+            <div class="footer-wrapper">
+                <ul class="footer-flex">
+                    <li>About</li>
+                    <li>Contact</li>
+                    <li>Contact</li>
+                    <li>Contact</li>
+                </ul>
+            </div>
+            
+            <p class="footer">Copyright 2024 TEXTAPP++ </p>
+        </footer>
+     
+    <script src="/static/js/sandbox.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.querySelector('ul li.header-name');
+            const recipientId = header.getAttribute('data-recipient-id');
+            const userId = header.getAttribute('data-user-id');
+            const form = document.querySelector('form');
+            const messageView = document.querySelector('.messages-view ul');
+        
+            const socket = new WebSocket(`ws://${window.location.host}/ws/chat/${recipientId}/`);
+        
+            socket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                const message = data.message;
+                const senderId = data.sender_id;
+                const recipientId = data.recipient_id;
+                console.log(data);
+        
+                const messageElement = document.createElement('li');
+                messageElement.className = userId === senderId ? 'sender' : 'receiver';
+                messageElement.innerHTML = `<span class="message">${message}</span>`;
+                messageView.appendChild(messageElement);
+        
+                // Scroll to the latest message
+                messageView.scrollTop = messageView.scrollHeight;
+            };
+        
+            socket.onclose = function(e) {
+                console.error('Chat socket closed unexpectedly');
+            };
+        
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const inputMessage = form.message.value.trim();
+                form.reset();
+        
+                if (inputMessage) {
+                    socket.send(JSON.stringify({
+                        'message': inputMessage,
+                        'recipient_Id': recipientId,
+                    }));
+                }
+            });
+        });
+        
+    </script>  
+        
+    
+</body>
+</html>

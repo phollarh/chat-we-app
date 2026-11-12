@@ -1,0 +1,118 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1 /font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <title>chatapp</title>
+   
+
+</head>
+<body>
+    <div class="popupwrappercloser">
+    </div>
+        <div class="wrapper">
+            <nav class="navbr-mine">
+                <ul class="my-logo">
+                    <li>TEXTAPP++</li>
+                </ul>
+                <ul class="my-ul">
+                    <li>Home</li>
+                    <li>About</li>
+                    <li>contact</li>
+                    <li>Store</li>
+                    {% if user.is_authenticated %}
+                    <span id-data="{{user.id}}" class="account_span"> Hello,{{user.first_name}}</span>
+                    {% endif %}
+                    <li class="account_icon"><i class="bi bi-person-circle"></i> </li>
+                        
+                            <div class=" acoount_popup">
+                                {% if not user.is_authenticated %}
+                                <li>Log in</li>
+                                <li class="pop-border">Sign up</li>
+                                {% else %}
+                                <li>My profile</li>
+                                <li class="pop-border">Settings</li>
+                                <li>Activity Log</li>
+                                <li>Log out</li>
+                                {% endif %}
+                            </div>
+                        
+                    
+                
+                </ul>
+
+            </nav>
+        </div>
+        {% if messages %}
+        <div class="alert alert-danger" role="alert">
+            {% for message in messages %}
+            {{message}}
+            {% endfor %}
+        </div>
+        {% endif %}
+    
+    
+        <div class="row">
+            <div class="col-8 left-side">
+                
+
+                <div class="box">
+                    <h1 class="heading">
+                        TEXTAPP++ 
+                    </h1>
+                    
+                    <p class="welcome-text">
+                        Unlimited texting at your fingertip
+                    </p>
+                </div>
+                 
+            </div>
+            <div class="col-4 right-side">
+                <div class="card email-confirmation shadow-lg border-0 rounded-lg mt-5">
+                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Confirm Your Email</h3></div>
+                    <div class="card-body">
+                        <center>
+                      <p> <h6> Please check your email to complete your resgistration.</h6> <strong>N.B check your spam folder</strong></p> 
+                      </center>
+                        <div class="card-footer email-confirmation-formdiv">
+                            <center>
+                                <form method="POST">
+                                {% csrf_token %}
+
+                                     {{form.as_p}}
+                                   <button class="btn btn-outline-secondary" > Resend Confirmstion </button>
+                                                     
+                                </form>
+                            
+                        <br><br>
+                            <a href="{% url 'logout' %}" class="text-decoration-none">Log out</a>
+                            
+                            </center>
+                            
+
+                        </div>
+                    </div>
+                </div>
+               
+                
+            </div>
+        </div>
+        <div class="box1"></div>
+        <br><br><br><br><br><br>
+        <footer>
+            <div class="footer-wrapper">
+                <ul class="footer-flex">
+                    <li>About</li>
+                    <li>Contact</li>
+                    <li>Contact</li>
+                    <li>Contact</li>
+                </ul>
+            </div>
+            
+            <p class="footer">Copyright 2024 TEXTAPP++ </p>
+        </footer>
+    <script src="/static/js/sandbox.js"></script>
+</body>
+</html>

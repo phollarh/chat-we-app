@@ -1,0 +1,63 @@
+<div class="row-flex-created">
+    <div class="col-four message-box">
+        <div class="shadow p-3 my-1 mb-5 bg-body-tertiary rounded">
+            <h3 class="message-header">Messages</h3>
+            <!-- List of Users (Sidebar) -->
+            {% for chat in chats %}
+                <div class="message-content">
+                    <span class="msg-pic"><i class="bi bi-person-circle"></i></span>
+                    <ul class="text-message">
+                        <!-- Display the other user's name -->
+                        <li class="sender">
+                            <a href="{% url 'chat' chat.sender.id %}">
+                                {% if chat.sender == user %}
+                                    {{ chat.recipient.first_name }}
+                                {% else %}
+                                    {{ chat.sender.first_name }}
+                                {% endif %}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-six message-view">
+        <div class="header-wrapper">
+            <div class="heading-content">
+                <ul>
+                    <li class="header-backtick"><i class="bi bi-caret-left-square-fill"></i></li>
+                    <ul>
+                        <li class="header-img"><i class="bi bi-person-circle"></i></li>
+                        <li class="header-name">{{ recipient.first_name }}</li>  
+                    </ul>
+                    <li class="heading-details"><i class="bi bi-three-dots"></i></li>    
+                </ul>
+            </div>
+        </div>
+
+        <div class="messsges-view">
+            <ul>
+                {% for message in chats %}
+                    {% if message.sender == user %}
+                        <li class="sender">{{ message.content }}</li>
+                    {% else %}
+                        <li class="receiver">{{ message.content }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>   
+        
+        <!-- Chat input form -->
+        <div class="input-wrapper">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="input-text">
+                    {{ form.content }}
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
