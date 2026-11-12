@@ -11,6 +11,8 @@ This project uses Django's traditional application structure, server-rendered te
 - **User accounts:** custom user and profile models, authentication-related views and templates, and email verification/password-reset flows.
 - **Messaging:** chat models and views, conversation previews, and support for image fields in the chat data model.
 - **Real-time communication:** Django Channels consumers and WebSocket routing.
+- **Frontend development:** server-rendered HTML templates and JavaScript-powered interactions.
+- **API-related work:** serializers and backend endpoints.
 - **External service exploration:** a Twilio integration module for messaging-related functionality.
 
 ## What I worked on
@@ -23,14 +25,18 @@ This project uses Django's traditional application structure, server-rendered te
 
 The repository includes code for additional account and chat functionality. The presence of a file or model does not necessarily mean every feature is fully implemented or tested.
 
+
 ## Technologies
 
-| Area | Technology |
+| Area | Technologies |
 | --- | --- |
 | Backend | Python, Django |
 | Real-time communication | Django Channels, WebSockets, ASGI |
 | Frontend | HTML, CSS, JavaScript, Django templates |
-| Data handling | Django models and migrations |
+| API-related components | Django REST Framework serializers |
+| Data | Django ORM and migrations |
+| External integration | Twilio-related module |
+
 
 ## Repository structure
 
